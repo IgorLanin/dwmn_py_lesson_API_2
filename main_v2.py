@@ -53,29 +53,19 @@ def is_shorten_link(token, url):
         "v": "5.199"
     }
 
-    response = requests.post(check_link_api_url, params=payload)
-    response.raise_for_status()
+    try:
+        response = requests.post(check_link_api_url, params=payload)
+        response.raise_for_status()
 
-    response_data = response.json()['response']['link']
-
-    if url != response_data:
-        return True
-    return False
-
-
-def get_api_response(token, url):
-    check_link_api_url = "https://api.vk.ru/method/utils.checkLink"
-
-    payload = {
-        "access_token": token,
-        "url": url,
-        "v": "5.199"
-    }
-
-    response = requests.post(check_link_api_url, params=payload)
-    response.raise_for_status()
-
-    return response.json()
+        if "error" in response.json():
+            raise Exception("Ошибка при выполнении запроса: "
+                            + response.json()['error']['error_msg'])
+        else:
+            return url != response.json()['response']['link']
+    except requests.exceptions.HTTPError:
+        print("Ошибка. Повторите запрос позже.")
+    except Exception as error:
+        print(error)
 
 
 def main():
@@ -84,7 +74,7 @@ def main():
     token = os.getenv("VK_ID_TOKEN", default=None)
 
     if token is None or not token:
-        return print("В программе отсутствует токен.Обратитесь к администратору.")
+        return print("В программе отсутствует токен. Обратитесь к администратору.")
 
     user_input = input("Введите ссылку для сокращения: ")
 
@@ -96,13 +86,8 @@ def main():
         else:
             short_link = shorten_link(token, user_input)
             print("Сокращенная ссылка: ", short_link)
-
     except KeyError:
-        response_data = get_api_response(token, user_input)
-        if response_data['error']['error_code'] == 5:
-            print("Ошибка авторизации. Проверьте правильность токена.")
-        elif response_data['error']['error_code'] == 100:
-            print("Вы ввели неверную ссылку. Ошибка: ", response_data['error']['error_msg'])
+        return None
 
 
 if __name__ == '__main__':
