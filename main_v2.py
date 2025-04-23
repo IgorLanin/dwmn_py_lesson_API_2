@@ -53,19 +53,14 @@ def is_shorten_link(token, url):
         "v": "5.199"
     }
 
-    try:
-        response = requests.post(check_link_api_url, params=payload)
-        response.raise_for_status()
+    response = requests.post(check_link_api_url, params=payload)
+    response.raise_for_status()
 
-        if "error" in response.json():
-            raise Exception("Ошибка при выполнении запроса: "
-                            + response.json()['error']['error_msg'])
-        else:
-            return url != response.json()['response']['link']
-    except requests.exceptions.HTTPError:
-        print("Ошибка. Повторите запрос позже.")
-    except Exception as error:
-        print(error)
+    if "error" in response.json():
+        raise Exception("Ошибка при выполнении запроса: "
+                        + response.json()['error']['error_msg'])
+    else:
+        return url != response.json()['response']['link']
 
 
 def main():
@@ -79,15 +74,14 @@ def main():
     user_input = input("Введите ссылку для сокращения: ")
 
     try:
-        answer = is_shorten_link(token, user_input)
-        if answer is True:
+        if is_shorten_link(token, user_input):
             clicks = count_clicks(token, user_input)
             print("Количество переходов по ссылке: ", clicks)
         else:
             short_link = shorten_link(token, user_input)
             print("Сокращенная ссылка: ", short_link)
-    except KeyError:
-        return None
+    except Exception as error:
+        print(error)
 
 
 if __name__ == '__main__':
