@@ -56,11 +56,12 @@ def is_shorten_link(token, url):
     response = requests.post(check_link_api_url, params=payload)
     response.raise_for_status()
 
-    if "error" in response.json():
-        raise Exception("Ошибка при выполнении запроса: "
-                        + response.json()['error']['error_msg'])
-    else:
-        return url != response.json()['response']['link']
+    responding_data = response.json()
+
+    if "error" in responding_data:
+        raise Exception(f"Ошибка при выполнении запроса: {responding_data['error']['error_msg']}")
+
+    return url != responding_data['response']['link']
 
 
 def main():
