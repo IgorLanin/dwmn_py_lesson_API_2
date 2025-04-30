@@ -2,6 +2,21 @@ import requests
 import os
 from dotenv import load_dotenv
 from urllib.parse import urlparse
+import argparse
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(
+            description='''Программа сокращает ссылку через VK API.
+            Если передана сокращенная ссылка - возвращает количество переходов''',
+            prog='Сокращение ссылок, статистика переходов')
+
+    parser.add_argument(
+                'link', nargs='+',
+                help='''Ссылка для сокращения или отображения кол-ва переходов.
+                Можно указать несколько ссылок через пробел''')
+
+    return parser
 
 
 def shorten_link(token, link):
@@ -72,17 +87,19 @@ def main():
     if token is None or not token:
         return print("В программе отсутствует токен. Обратитесь к администратору.")
 
-    user_input = input("Введите ссылку для сокращения: ")
+    parser = create_parser()
+    user_input = parser.parse_args()
 
-    try:
-        if is_shorten_link(token, user_input):
-            clicks = count_clicks(token, user_input)
-            print("Количество переходов по ссылке: ", clicks)
-        else:
-            short_link = shorten_link(token, user_input)
-            print("Сокращенная ссылка: ", short_link)
-    except Exception as error:
-        print(error)
+    for item in user_input.link:
+        try:
+            if is_shorten_link(token, item):
+                clicks = count_clicks(token, item)
+                print("Количество переходов по ссылке: ", clicks)
+            else:
+                short_link = shorten_link(token, item)
+                print("Сокращенная ссылка: ", short_link)
+        except Exception as error:
+            print(error)
 
 
 if __name__ == '__main__':
