@@ -34,13 +34,14 @@ pip install -r requirements.txt
 
 Для работы со скриптом необходимо указать запрос в командной строке в формате: ```python  название_скрипта ссылка```
 
-Пример работы команды ```python main_v2.py https://github.com/IgorLanin```:
+Пример работы команды ```python main.py https://github.com/IgorLanin```:
 
-![image](https://github.com/user-attachments/assets/44e9b569-9f0c-441d-9802-11b658444220)
+![image](https://github.com/user-attachments/assets/6f8e6a81-7842-429c-9436-f9a2e0ac0eef)
 
-Можно указать несколько ссылок через пробел для сокращения/вывода статистики по количеству переходов:
+Если передать обрезанную ссылку, выведется количество переходов по ней:
 
-![image](https://github.com/user-attachments/assets/c47f13f5-45f0-47f9-8914-de342b4d7f23)
+![image](https://github.com/user-attachments/assets/9b2c6f4a-c859-4226-936c-0475595d61db)
+
 
 
 ### Цель проекта
