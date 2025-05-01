@@ -73,7 +73,7 @@ def is_shorten_link(token, url):
     responding_data = response.json()
 
     if "error" in responding_data:
-        raise Exception(f"Ошибка при выполнении запроса: {responding_data['error']['error_msg']}")
+        raise ValueError(f"Ошибка при выполнении запроса: {responding_data['error']['error_msg']}")
 
     return url != responding_data['response']['link']
 
@@ -96,7 +96,7 @@ def main():
         else:
             short_link = shorten_link(token, user_input.link)
             print("Сокращенная ссылка: ", short_link)
-    except Exception as error:
+    except ValueError as error:
         print(error)
 
 
