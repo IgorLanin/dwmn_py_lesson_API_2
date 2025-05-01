@@ -9,12 +9,11 @@ def create_parser():
     parser = argparse.ArgumentParser(
             description='''Программа сокращает ссылку через VK API.
             Если передана сокращенная ссылка - возвращает количество переходов''',
-            prog='Сокращение ссылок, статистика переходов')
+            prog='Сокращение ссылок/статистика переходов')
 
     parser.add_argument(
-                'link', nargs='+',
-                help='''Ссылка для сокращения или отображения кол-ва переходов.
-                Можно указать несколько ссылок через пробел''')
+            'link',
+            help='Ссылка для сокращения или отображения кол-ва переходов.')
 
     return parser
 
@@ -90,16 +89,15 @@ def main():
     parser = create_parser()
     user_input = parser.parse_args()
 
-    for item in user_input.link:
-        try:
-            if is_shorten_link(token, item):
-                clicks = count_clicks(token, item)
-                print("Количество переходов по ссылке: ", clicks)
-            else:
-                short_link = shorten_link(token, item)
-                print("Сокращенная ссылка: ", short_link)
-        except Exception as error:
-            print(error)
+    try:
+        if is_shorten_link(token, user_input.link):
+            clicks = count_clicks(token, user_input.link)
+            print("Количество переходов по ссылке: ", clicks)
+        else:
+            short_link = shorten_link(token, user_input.link)
+            print("Сокращенная ссылка: ", short_link)
+    except Exception as error:
+        print(error)
 
 
 if __name__ == '__main__':
